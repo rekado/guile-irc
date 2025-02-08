@@ -73,8 +73,8 @@
 (define (disable-gnutls-debug)
   (tls:disable-global-logging!))
 
-(define (get-ai-sock address family)
-  (let ([ai (car (getaddrinfo address "irc" family))])
+(define (get-ai-sock address service-name family)
+  (let ([ai (car (getaddrinfo address service-name family))])
     (values ai (socket (addrinfo:fam ai)
                          (addrinfo:socktype ai)
                          (addrinfo:protocol ai)))))
@@ -87,7 +87,7 @@ address: Address to connect.
 port: port to connect to.
 family: Socket family (see manual  7.2.11)
 tls: If set to #t use ssl (requires gnutls)"
-  (let-values ([(ai sock) (get-ai-sock address family)])
+  (let-values ([(ai sock) (get-ai-sock address (if ssl "ircs-u" "ircd") family)])
     (make-network
      address ;; address
      port    ;; port
